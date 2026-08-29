@@ -1,0 +1,8 @@
+rootProject.name = 'java-webflux-driven-adapters'
+
+include 'sp-engine-executor'
+
+include 'domain'
+include 'application'
+include 'adapter-in-rest'
+include 'bootstrap'
