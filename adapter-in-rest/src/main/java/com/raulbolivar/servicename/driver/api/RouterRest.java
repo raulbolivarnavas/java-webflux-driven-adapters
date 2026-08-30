@@ -1,5 +1,6 @@
 package com.raulbolivar.servicename.driver.api;
 
+import com.raulbolivar.servicename.driver.api.handler.RetrievePostsHandler;
 import com.raulbolivar.servicename.driver.api.handler.SpExecutorHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +16,16 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRest {
 
     @Bean
-    public RouterFunction<ServerResponse> storedProcedureRoutes(SpExecutorHandler handler) {
+    public RouterFunction<ServerResponse> storedProcedureRoutes(SpExecutorHandler spExecutorHandler,
+                                                                RetrievePostsHandler retrievePostsHandler) {
         return route()
                 .POST("/api/v1/stored-procedures/execute",
                         accept(MediaType.APPLICATION_JSON)
                                 .and(contentType(MediaType.APPLICATION_JSON)),
-                        handler::execute)
+                        spExecutorHandler::execute)
+                .GET("/api/v1/posts",
+                        accept(MediaType.APPLICATION_JSON),
+                        retrievePostsHandler::retrieveAll)
                 .build();
     }
 }

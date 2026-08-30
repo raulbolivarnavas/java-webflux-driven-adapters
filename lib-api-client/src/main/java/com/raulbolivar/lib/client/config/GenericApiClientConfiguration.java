@@ -18,14 +18,6 @@ import reactor.netty.http.client.HttpClient;
 @EnableConfigurationProperties(GenericApiClientProperties.class)
 public class GenericApiClientConfiguration {
 
-//    @Bean
-//    GenericApiClient genericApiClient(WebClient genericWebClient,
-//                                      GenericApiClientProperties properties,
-//                                      GenericApiResilienceExecutor resilience,
-//                                      JsonMapper jsonMapper) {
-//        return new WebClientGenericApiClient(genericWebClient, properties, resilience, jsonMapper);
-//    }
-
     @Bean
     WebClient genericWebClient(GenericApiClientProperties properties) {
         var transport = properties.transport();
@@ -45,5 +37,4 @@ public class GenericApiClientConfiguration {
                         .maxInMemorySize(transport.maxInMemorySize()))
                 .build();
     }
-
 }

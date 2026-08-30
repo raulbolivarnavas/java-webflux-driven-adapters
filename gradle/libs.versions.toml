@@ -49,7 +49,7 @@ blockhound-junit       = { module = "io.projectreactor.tools:blockhound-junit-pl
 slf4j-api              = { module = "org.slf4j:slf4j-api",                                       version.ref = "slf4j" }
 boot-starter-log4j2    = { module = "org.springframework.boot:spring-boot-starter-log4j2", version.ref = "spring-boot" }
 boot-starter-aspectj   = { module = "org.springframework.boot:spring-boot-starter-aspectj"                             }
-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
+boot-config-processor  = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
 
 # [Spring WebFlux]
 boot-starter-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux"                               }

@@ -18,6 +18,7 @@ dependencies {
 
     // ── Driven Adapters
     implementation project(':sp-engine-executor')
+    implementation project(':json-placeholder-api-client')
 
     // ── Support pro-libraries
     implementation project(':lib-api-client')

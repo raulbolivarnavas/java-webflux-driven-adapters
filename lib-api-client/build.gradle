@@ -8,11 +8,13 @@ dependencies {
 
     api libs.reactor.core
 
+    implementation libs.support.logging
+
     implementation libs.boot.starter.webflux
     implementation libs.boot.validation
 
-    implementation libs.boot.configuration.processor
-    annotationProcessor libs.boot.configuration.processor
+    implementation libs.boot.config.processor
+    annotationProcessor libs.boot.config.processor
 
     implementation libs.projectlombok
     annotationProcessor libs.projectlombok

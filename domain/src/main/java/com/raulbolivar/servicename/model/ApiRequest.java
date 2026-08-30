@@ -12,6 +12,7 @@ public record ApiRequest(
         Object body,
         String correlationId
 ) {
+
     public ApiRequest {
         operation = requireText(operation, "operation");
         pathParams = copy(pathParams);

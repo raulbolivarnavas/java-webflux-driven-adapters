@@ -15,6 +15,8 @@ import com.raulbolivar.servicename.model.ApiResponse;
 import com.raulbolivar.servicename.ports.out.GenericApiClientGateway;
 import com.raulbolivar.servicename.ports.out.GenericApiResilienceExecutorGateway;
 
+import io.github.raulbolivarnavas.supportlogging.SupportLogging;
+import io.github.raulbolivarnavas.supportlogging.model.SupportLogCapture;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -28,32 +30,45 @@ import reactor.core.publisher.Mono;
 import tools.jackson.databind.json.JsonMapper;
 
 @Component
-public final class WebClientGenericApiClient implements GenericApiClientGateway {
+public class WebClientGenericApiClient implements GenericApiClientGateway {
 
     private final WebClient                           webClient;
     private final GenericApiClientProperties          properties;
     private final GenericApiResilienceExecutorGateway resilience;
     private final JsonMapper                          jsonMapper;
     private final ApiClientMapper                     mapper;
+    private final SupportLogCapture                   supportLogCapture;
 
     public WebClientGenericApiClient(WebClient webClient,
                                      GenericApiClientProperties properties,
                                      GenericApiResilienceExecutorGateway resilience,
                                      JsonMapper jsonMapper,
-                                     ApiClientMapper mapper) {
+                                     ApiClientMapper mapper,
+                                     SupportLogCapture supportLogCapture) {
         this.webClient = webClient;
         this.properties = properties;
         this.resilience = resilience;
         this.jsonMapper = jsonMapper;
         this.mapper = mapper;
+        this.supportLogCapture = supportLogCapture;
     }
 
     @Override
+    @SupportLogging(operation = "processing")
     public <T> Mono<ApiResponse<T>> execute(ApiRequest request, Class<T> responseType) {
         var endpoint = endpoint(request.operation());
-        return resilience
-                .execute(request.operation(), invoke(mapper.toApiRequestDto(request), endpoint, responseType))
-                .map(mapper::toApiResponse);
+        return supportLogCapture
+                .request(
+                        endpoint.method().name(),
+                        endpoint.url(),
+                        request.queryParams(),
+                        request.headers(),
+                        request.body()
+                )
+                .then(resilience
+                        .execute(request.operation(), invoke(mapper.toApiRequestDto(request), endpoint, responseType))
+                        .map(mapper::toApiResponse)
+                );
     }
 
     private <T> Mono<ApiResponseDto<T>> invoke(ApiRequestDto request,
@@ -72,9 +87,9 @@ public final class WebClientGenericApiClient implements GenericApiClientGateway 
                 ? spec.body(BodyInserters.empty())
                 : spec.bodyValue(request.body());
 
-        return requestSpec.exchangeToMono(response -> decode(response, request.operation(), responseType))
-                .onErrorMap(WebClientRequestException.class,
-                        error -> new ExternalConnectionException(request.operation(), error));
+        return requestSpec
+                .exchangeToMono(response -> decode(response, request.operation(), responseType))
+                .onErrorMap(WebClientRequestException.class,error -> new ExternalConnectionException(request.operation(), error));
     }
 
     private <T> Mono<ApiResponseDto<T>> decode(
