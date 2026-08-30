@@ -1,6 +1,7 @@
 rootProject.name = 'java-webflux-driven-adapters'
 
 include 'sp-engine-executor'
+include 'json-placeholder-api-client'
 
 include 'lib-api-client'
 include 'lib-resilience'

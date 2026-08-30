@@ -1,0 +1,16 @@
+dependencies {
+    implementation project(':application')
+    implementation project(':domain')
+    implementation project(':lib-api-client')
+
+    implementation libs.boot.starter.webflux
+    implementation libs.reactor.core
+
+    compileOnly libs.projectlombok
+    annotationProcessor libs.projectlombok
+
+    implementation libs.mapstruct
+    annotationProcessor libs.mapstruct.processor
+
+    implementation libs.spring.context
+}
