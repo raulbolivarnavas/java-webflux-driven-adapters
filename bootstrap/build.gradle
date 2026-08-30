@@ -12,8 +12,16 @@ java {
 dependencies {
     implementation project(':application')
     implementation project(':domain')
+
+    // ── Driver Adapters
     implementation project(':adapter-in-rest')
+
+    // ── Driven Adapters
     implementation project(':sp-engine-executor')
+
+    // ── Support pro-libraries
+    implementation project(':lib-api-client')
+    implementation project(':lib-resilience')
 
     // ── Support for Logging
     implementation libs.support.logging

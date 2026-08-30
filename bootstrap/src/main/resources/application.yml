@@ -81,6 +81,87 @@ info:
       libraries:
         - "com.raulbolivar:1.0.0-SNAPSHOT"
 
+## ============================================================================
+## Bloque a copiar en el application.yml del microservicio consumidor.
+## Mapea 1:1 con el record ExternalApiProperties.
+## ============================================================================
+adapters:
+  generic-api-client:
+    default-headers:
+      Accept: application/json
+
+    endpoints:
+      json-placeholder-retrieve-posts:
+        url: https://jsonplaceholder.typicode.com/posts
+        method: GET
+        headers:
+          Accept: application/json
+
+    transport:
+      connect-timeout: 2s
+      read-timeout: 10s
+      write-timeout: 10s
+      max-in-memory-size: 2097152
+
+    resilience:
+      timeout: 12s
+
+      circuit-breaker:
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 5s
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state: 30s
+        permitted-calls-in-half-open-state: 3
+
+      retry:
+        max-attempts: 2
+        wait-duration: 200ms
+
+  external-api:
+    endpoints:
+      some-retrieve:
+        url: https://raulrobinson.com/business/business-data-retrieves/v1/some-retrieve
+        method: POST
+        headers:
+          Content-Type: application/json
+          Caller-Service: business-data-retrieves-product-block-code-retrieve
+      encrypt-info:
+        url: https://raulrobinson.com/business-services/security-business-admin/v1/encrypt-info
+        method: POST
+        headers:
+          Content-Type: application/json
+      decrypt-info:
+        url: https://raulrobinson.com/business-services/security-business-admin/v1/decrypt-info
+        method: POST
+        headers:
+          Content-Type: application/json
+
+    default-headers:
+      Accept: application/json
+      Application-Id: app-application-id
+
+    timeouts:
+      connect: 3s          # handshake TCP
+      read: 8s             # inactividad de socket
+      write: 8s
+      operation: 10s       # end-to-end por intento (TimeLimiter)
+
+    resilience:
+      circuit-breaker:
+        failure-rate-threshold: 50          # % de fallos para abrir
+        slow-call-rate-threshold: 80        # % de llamadas lentas para abrir
+        slow-call-duration-threshold: 5s
+        sliding-window-size: 20
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 5
+      retry:
+        max-attempts: 5                     # 1 llamada + 4 reintentos
+        wait-duration: 500ms
+        backoff-multiplier: 2.0             # 500ms -> 1s -> 2s
+
 support:
   logging:
     level: DEBUG
