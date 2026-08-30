@@ -34,7 +34,7 @@ server:
   address: 0.0.0.0
 
 stored-procedure:
-  sp-content: "U0VUIE5PQ09VTlQ..."
+  sp-content: ${STORED_PROCEDURE_CONTENT}
 
 database:
   host: ${DB_HOST:localhost}
