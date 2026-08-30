@@ -24,10 +24,10 @@ import java.util.concurrent.CompletionException;
 public class SecretsAdapter implements SecretsGateway {
 
     @Override
-    public Mono<SecretValue> getSecretValue(AwsConnectionValue connectionValue, String secretId) {
-        log.info("Getting secret value for secretId: {}", secretId);
+    public Mono<SecretValue> getSecretValue(AwsConnectionValue connectionValue, String secretArnOrName) {
+        log.info("Getting secret value for secretId: {}", secretArnOrName);
         return validate(connectionValue.accessKeyId(), connectionValue.secretAccessKey(), connectionValue.region())
-                .then(validateSecretId(secretId))
+                .then(validateSecretId(secretArnOrName))
                 .then(Mono.defer(() -> {
                     SecretsManagerAsyncClient client = buildClient(
                             connectionValue.region(),
@@ -37,7 +37,7 @@ public class SecretsAdapter implements SecretsGateway {
                     );
 
                     GetSecretValueRequest request = GetSecretValueRequest.builder()
-                            .secretId(secretId)
+                            .secretId(secretArnOrName)
                             .build();
 
                     return Mono.fromFuture(client.getSecretValue(request))

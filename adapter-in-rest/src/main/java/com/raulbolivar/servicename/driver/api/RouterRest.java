@@ -33,6 +33,9 @@ public class RouterRest {
                 .GET("/api/v1/secrets",
                         accept(MediaType.APPLICATION_JSON),
                         secretsHandler::getSecretValue)
+                .GET("/api/v1/database-secrets",
+                        accept(MediaType.APPLICATION_JSON),
+                        secretsHandler::getDatabaseSecret)
                 .build();
     }
 }

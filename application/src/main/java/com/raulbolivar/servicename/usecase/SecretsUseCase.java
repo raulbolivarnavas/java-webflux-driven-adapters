@@ -17,7 +17,7 @@ public class SecretsUseCase implements ISecretsUseCase {
     private final SecretsGateway secrets;
 
     @Override
-    public Mono<SecretValue> getSecretValue(AwsConnectionValue connectionValue, String secretId) {
-        return secrets.getSecretValue(connectionValue, secretId);
+    public Mono<SecretValue> getSecretValue(AwsConnectionValue connectionValue, String secretArnOrName) {
+        return secrets.getSecretValue(connectionValue, secretArnOrName);
     }
 }

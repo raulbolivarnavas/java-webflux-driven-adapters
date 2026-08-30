@@ -4,6 +4,7 @@ import com.raulbolivar.servicename.driver.api.helper.RequestValidation;
 import com.raulbolivar.servicename.driver.api.mapper.SecretsMapper;
 import com.raulbolivar.servicename.exception.SecretsBadRequestException;
 import com.raulbolivar.servicename.model.AwsConnectionValue;
+import com.raulbolivar.servicename.ports.in.IRetrieveDatabaseSecretUseCase;
 import com.raulbolivar.servicename.ports.in.ISecretsUseCase;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SecretsHandler extends RequestValidation {
 
+    private final IRetrieveDatabaseSecretUseCase retrieveDatabaseSecret;
     private final ISecretsUseCase secrets;
     private final SecretsMapper   mapper;
 
@@ -29,13 +31,13 @@ public class SecretsHandler extends RequestValidation {
         String secretAccessKey = header(request, "x-aws-secret-access-key");
         String sessionToken    = header(request, "x-aws-session-token");
         String region          = blankFallback(header(request, "x-aws-region"), "us-east-1");
-        String secretId        = header(request, "x-secret-id");
+        String secretArnOrName = header(request, "x-secret-id");
 
         if (accessKeyId == null || secretAccessKey == null) {
             return Mono.error(new SecretsBadRequestException("Faltan credenciales AWS"));
         }
 
-        if (secretId == null || secretId.isBlank()) {
+        if (secretArnOrName == null || secretArnOrName.isBlank()) {
             return Mono.error(new SecretsBadRequestException("Falta header x-secret-id"));
         }
 
@@ -46,8 +48,16 @@ public class SecretsHandler extends RequestValidation {
                 region
         );
 
-        return secrets.getSecretValue(connectionValue, secretId)
+        return secrets.getSecretValue(connectionValue, secretArnOrName)
                 .map(mapper::toSecretValueResponse)
+                .flatMap(dto -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(dto));
+    }
+
+    public Mono<ServerResponse> getDatabaseSecret(ServerRequest request) {
+        return retrieveDatabaseSecret.execute()
+                .map(mapper::toDatabaseSecretResponse)
                 .flatMap(dto -> ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(dto));

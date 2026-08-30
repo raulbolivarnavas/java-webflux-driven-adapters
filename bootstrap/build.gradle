@@ -21,6 +21,7 @@ dependencies {
     implementation project(':json-placeholder-api-client')
     implementation project(':aws-secrets')
     implementation project(':aws-parameters')
+    implementation project(':aws-secrets-manager-adapter')
 
     // ── Support pro-libraries
     implementation project(':lib-api-client')
