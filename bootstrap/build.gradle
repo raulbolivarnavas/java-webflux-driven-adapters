@@ -19,6 +19,8 @@ dependencies {
     // ── Driven Adapters
     implementation project(':sp-engine-executor')
     implementation project(':json-placeholder-api-client')
+    implementation project(':aws-secrets')
+    implementation project(':aws-parameters')
 
     // ── Support pro-libraries
     implementation project(':lib-api-client')

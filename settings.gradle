@@ -5,6 +5,8 @@ include 'json-placeholder-api-client'
 
 include 'lib-api-client'
 include 'lib-resilience'
+include 'aws-secrets'
+include 'aws-parameters'
 
 include 'domain'
 include 'application'
