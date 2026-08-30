@@ -1,7 +1,8 @@
 package com.raulbolivar.servicename.usecase;
 
+import com.raulbolivar.servicename.model.ProcedureResponse;
+import com.raulbolivar.servicename.model.ProcedureResultDefinition;
 import com.raulbolivar.servicename.model.StoredProcedureCommand;
-import com.raulbolivar.servicename.model.StoredProcedureResult;
 import com.raulbolivar.servicename.ports.in.IStoredProcedureExecutorUseCase;
 import com.raulbolivar.servicename.ports.out.StoredProcedureDecoder;
 import com.raulbolivar.servicename.ports.out.StoredProcedureExecutorGateway;
@@ -23,11 +24,19 @@ public class SpExecutorUseCase implements IStoredProcedureExecutorUseCase {
     private final StoredProcedureDecoder decoder;
 
     @Override
-    public Mono<StoredProcedureResult> execute(StoredProcedureCommand command) {
+    public Mono<ProcedureResponse> execute(StoredProcedureCommand command) {
         log.info("Executing stored procedure with command: {}", command);
         String decodedSpContent = decoder.decode(spContent);
-        return executorGateway.execute(command, decodedSpContent)
-                .doOnSuccess(result -> log.info("Stored procedure executed successfully with result: {}", result))
+
+        ProcedureResultDefinition definition = new ProcedureResultDefinition(
+                "CodigoError",
+                "MensajeError",
+                "ReturnValue",
+                "-1"
+        );
+
+        return executorGateway.execute(command, decodedSpContent, definition)
+                .doOnSuccess(response -> log.info("Stored procedure executed successfully with response: {}", response))
                 .doOnError(error -> log.error("Error executing stored procedure", error));
     }
 }

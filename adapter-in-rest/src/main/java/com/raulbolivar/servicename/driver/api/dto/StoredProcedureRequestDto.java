@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.Map;
 
 public record StoredProcedureRequestDto(
-        @NotNull
-        Map<String, Object> parameters
+        @NotNull Map<String, Object> parameters
 ) {
 }

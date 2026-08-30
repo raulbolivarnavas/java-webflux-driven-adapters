@@ -22,6 +22,7 @@ public final class SqlParameterParser {
 
         while (matcher.find()) {
             String parameterName = matcher.group(1);
+
             if (!parameters.containsKey(parameterName)) {
                 throw new IllegalArgumentException("Missing SQL parameter: " + parameterName);
             }
