@@ -299,8 +299,8 @@ Solicitud:
 ```json
 {
   "parameters": {
-    "cardNumber": "0004009501001857002",
-    "country": "HN"
+    "cardNumber": "0004001123443210987",
+    "country": "CO"
   }
 }
 ```
@@ -333,8 +333,8 @@ curl --location 'http://localhost:8080/api/v1/stored-procedures/execute' \
   --header 'Accept: application/json' \
   --data '{
     "parameters": {
-      "cardNumber": "0004009501001857002",
-      "country": "HN"
+      "cardNumber": "0004001123443219870",
+      "country": "CO"
     }
   }'
 ```
