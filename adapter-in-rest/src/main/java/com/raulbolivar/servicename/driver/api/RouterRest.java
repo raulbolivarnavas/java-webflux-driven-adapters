@@ -1,5 +1,6 @@
 package com.raulbolivar.servicename.driver.api;
 
+import com.raulbolivar.servicename.driver.api.handler.ParameterStoreHandler;
 import com.raulbolivar.servicename.driver.api.handler.RetrievePostsHandler;
 import com.raulbolivar.servicename.driver.api.handler.SecretsHandler;
 import com.raulbolivar.servicename.driver.api.handler.SpExecutorHandler;
@@ -20,7 +21,8 @@ public class RouterRest {
     public RouterFunction<ServerResponse> storedProcedureRoutes(
             SpExecutorHandler spExecutorHandler,
             RetrievePostsHandler retrievePostsHandler,
-            SecretsHandler secretsHandler
+            SecretsHandler secretsHandler,
+            ParameterStoreHandler parameterStoreHandler
     ) {
         return route()
                 .POST("/api/v1/stored-procedures/execute",
@@ -36,6 +38,9 @@ public class RouterRest {
                 .GET("/api/v1/database-secrets",
                         accept(MediaType.APPLICATION_JSON),
                         secretsHandler::getDatabaseSecret)
+                .GET("/api/v1/parameters/{parameterName}",
+                        accept(MediaType.APPLICATION_JSON),
+                        parameterStoreHandler::getParameters)
                 .build();
     }
 }
