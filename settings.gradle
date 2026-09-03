@@ -8,6 +8,7 @@ include 'lib-resilience'
 include 'aws-secrets'
 include 'aws-parameters'
 include 'aws-secrets-manager-adapter'
+include 'aws-parameter-store-adapter'
 
 include 'domain'
 include 'application'

@@ -22,6 +22,7 @@ dependencies {
     implementation project(':aws-secrets')
     implementation project(':aws-parameters')
     implementation project(':aws-secrets-manager-adapter')
+    implementation project(':aws-parameter-store-adapter')
 
     // ── Support pro-libraries
     implementation project(':lib-api-client')

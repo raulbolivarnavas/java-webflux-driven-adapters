@@ -1,0 +1,17 @@
+dependencies {
+    implementation project(':domain')
+    implementation project(':application')
+
+    implementation libs.spring.context.support
+    implementation libs.boot.validation
+
+    implementation libs.jackson.databind
+
+    implementation libs.awssdk.ssm
+    implementation libs.awssdk.netty
+
+    implementation libs.boot.config.processor
+    annotationProcessor libs.boot.config.processor
+
+    implementation libs.boot.actuator
+}
